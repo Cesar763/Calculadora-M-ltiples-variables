@@ -1,3 +1,147 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#include <ctype.h>
+
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+void DOM ();
+void DevP();
+int main(int argc, char *argv[]) {
+	int S;
+	char F[20];
+		printf("Bienvenido al programa de calculadora de multiples variables Ingrese su nombre o alias: \n");
+			gets(F);
+				printf("Hola %s Iniciamos el programa \n",F);
+	printf("Ingrese el numero de la operacion que desee iniciar: \n");
+	printf("***Dominio Ingresa 1:*** \n");
+	printf("***Derivadas parciales Ingresa 2:*** \n");	
+	scanf("%i",&S);
+	while (S<0 ){
+			printf("No se encontro el comando, ingresa un numero valido \n");
+	scanf("%i",&S);
+	}
+		while (S>2 ){
+			printf("No se encontro el comando, ingresa un numero valido: \n");
+	scanf("%i",&S);
+	}
+	switch(S){
+		case 1:{
+	DOM ();
+			break;
+		}
+		case 2:{
+
+	DevP();	
+			break;
+		}
+		default:{
+				printf("No se encontro el comando, inicia nuevamente el programa \n");
+			break;
+		}
+	}	
+	return 0;
+}
+
+void DOM() {
+    int n, i;
+    char funcion[200]; 
+    struct Variable {
+        char nombre[50]; 
+    } variables[20];
+
+    printf("Cuantas variables tiene su funcion (maximo 20): ");
+    scanf("%d", &n);
+    getchar(); 
+
+    if (n < 1 || n > 20) {
+        printf("Numero de variables invalido. Intente nuevamente.\n");
+        return;
+    }
+
+    printf("Ingrese los nombres de las variables:\n");
+    for (i = 0; i < n; i++) {
+        printf("Variable %d: ", i + 1);
+        fgets(variables[i].nombre, sizeof(variables[i].nombre), stdin);
+        variables[i].nombre[strcspn(variables[i].nombre, "\n")] = '\0'; // Eliminar salto de lï¿½nea
+    }
+
+    printf("\nIngrese su funcion matematica (ej. sin(x) + cos(y) + 1/(x+y)+ln(x)+sqrt(y)):\n");
+    fgets(funcion, sizeof(funcion), stdin);
+    funcion[strcspn(funcion, "\n")] = '\0'; 
+
+    printf("\nFuncion ingresada: f(");
+    for (i = 0; i < n; i++) {
+        printf("%s", variables[i].nombre);
+        if (i < n - 1) printf(", ");
+    }
+    printf(") = %s\n", funcion);
+
+    printf("\n?? Analisis del dominio:\n");
+
+    if (strstr(funcion, "ln(") || strstr(funcion, "log(")) {
+        printf(" Restriccion: El argumento de ln() o log() debe ser mayor que 0.\n");
+    }
+
+    if (strstr(funcion, "sqrt(")) {
+        printf("Restriccion: El argumento de sqrt() debe ser mayor o igual a 0.\n");
+    }
+
+    char* ptr = funcion;
+    while ((ptr = strchr(ptr, '/')) != NULL) {
+        char expr[100] = {0};
+        int j = 0;
+        ptr++; // Avanzar al denominador
+
+        if (*ptr == '(') {
+            ptr++; 
+            int parentesis = 1;
+            while (*ptr && parentesis > 0 && j < 99) {
+                if (*ptr == '(') parentesis++;
+                if (*ptr == ')') parentesis--;
+                if (parentesis > 0) {
+                    expr[j++] = *ptr;
+                }
+                ptr++;
+            }
+            expr[j] = '\0';
+            if (strlen(expr) > 0) {
+                printf("Restriccion: La expresion '%s' no debe ser igual a 0.\n", expr);
+            }
+        } else {
+
+while (*ptr && *ptr != '+' && *ptr != '-' && *ptr != '*' && *ptr != '/' && j < 99) {
+    expr[j++] = *ptr;
+    ptr++;
+}
+expr[j] = '\0';
+
+if (strlen(expr) > 0) {
+    printf("Restriccion: '%s' no debe ser igual a 0.\n", expr);
+}
+        }
+    }
+
+    if (strstr(funcion, "sin(")) {
+        printf("Dominio: El argumento de sin() puede tomar cualquier valor real.\n");
+    }
+    if (strstr(funcion, "cos(")) {
+        printf("Dominio: El argumento de cos() puede tomar cualquier valor real.\n");
+    }
+
+    printf("\n Dominio: La funcion esta definida en todos los valores reales que cumplen las restricciones anteriores.\n");
+}
+
+void DevP() {
+    int n, i, sumas;
+    char funcion[200];
+    struct Variable {
+        char nombre[50];
+    } variables[20];
+
+    printf("Cuantas variables tiene su funcion (maximo 20): ");
+    scanf("%d", &n);
+    getchar(); 
 
     if (n < 1 || n > 20) {
         printf("Numero de variables invalido.\n");
